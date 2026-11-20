@@ -1,0 +1,22 @@
+# Frontend
+tradex_frontend/node_modules/
+tradex_frontend/dist/
+
+# Backend
+tradex_backend/target/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+
+# Operating system
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
