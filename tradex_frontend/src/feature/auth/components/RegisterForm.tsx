@@ -1,47 +1,47 @@
 import { Box, Button, Stack, TextField } from '@mui/material'
 
-import {useForm} from "react-hook-form"
-import {zodResolver} from "@hookform/resolvers/zod"
-import {registrationSchema} from "../schema/registration.schema.ts"
-import type {RegistrationSchema} from "../schema/registration.schema.ts"
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { registrationSchema } from '../schema/registration.schema.ts'
+import type { RegistrationSchema } from '../schema/registration.schema.ts'
 
 export default function RegisterForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(registrationSchema),
 
-  const {register, handleSubmit, formState: {errors}} = useForm(
-    {
-      resolver: zodResolver(registrationSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
 
-      defaultValues: {
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: ""
-      },
+    mode: 'onTouched',
+  })
 
-      mode: "onTouched"
-
-    }
-  )
-
-  const {ref: firstNameRef, ...firstNameProps} = register("firstName")
-  const {ref: lastNameRef, ...lastNameProps} = register("lastName")
-  const {ref: emailRef, ...emailProps} = register("email")
-  const {ref: passwordRef, ...passwordProps} = register("password")
-  const {ref: confirmPasswordRef, ...confirmPasswordProps} = register("confirmPassword")
-
+  const { ref: firstNameRef, ...firstNameProps } = register('firstName')
+  const { ref: lastNameRef, ...lastNameProps } = register('lastName')
+  const { ref: emailRef, ...emailProps } = register('email')
+  const { ref: passwordRef, ...passwordProps } = register('password')
+  const { ref: confirmPasswordRef, ...confirmPasswordProps } =
+    register('confirmPassword')
 
   const onSubmit = (data: RegistrationSchema) => {
     console.log(data)
   }
-
 
   return (
     <Stack
       component="form"
       noValidate
       onSubmit={handleSubmit(onSubmit)}
-      spacing={2.5}>
+      spacing={2.5}
+    >
       {/* Name fields */}
       <Box
         sx={{
@@ -74,7 +74,7 @@ export default function RegisterForm() {
           placeholder="Enter last name"
           autoComplete="family-name"
           error={!!errors.lastName}
-          helperText={errors.lastName? errors.lastName.message : " "}
+          helperText={errors.lastName ? errors.lastName.message : ' '}
         />
       </Box>
 
@@ -89,7 +89,7 @@ export default function RegisterForm() {
         placeholder="you@example.com"
         autoComplete="email"
         error={!!errors.email}
-        helperText={errors.email ? errors.email?.message : " "}
+        helperText={errors.email ? errors.email?.message : ' '}
       />
 
       {/* Password */}
@@ -103,7 +103,7 @@ export default function RegisterForm() {
         placeholder="Create a password"
         autoComplete="new-password"
         error={!!errors.password}
-        helperText={errors.password ? errors.password?.message : " "}
+        helperText={errors.password ? errors.password?.message : ' '}
       />
 
       {/* Confirm password */}
@@ -117,7 +117,9 @@ export default function RegisterForm() {
         placeholder="Confirm your password"
         autoComplete="new-password"
         error={!!errors.confirmPassword}
-        helperText={errors.confirmPassword ? errors.confirmPassword?.message : " "}
+        helperText={
+          errors.confirmPassword ? errors.confirmPassword?.message : ' '
+        }
       />
 
       {/* Submit */}

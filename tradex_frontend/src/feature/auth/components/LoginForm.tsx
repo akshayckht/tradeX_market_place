@@ -1,35 +1,41 @@
-import {Button, IconButton, InputAdornment, Stack, TextField} from '@mui/material'
+import {
+  Button,
+  IconButton,
+  InputAdornment,
+  Stack,
+  TextField,
+} from '@mui/material'
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { loginSchema, type LoginSchema } from "../schema/login.schema.ts"
-import {useState} from "react";
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
-
+import { loginSchema, type LoginSchema } from '../schema/login.schema.ts'
+import { useState } from 'react'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
 
 export default function LoginForm() {
-
   const [showPassword, setShowPassword] = useState(false)
 
-  const { register,
+  const {
+    register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
 
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
 
-    mode: "onTouched"
+    mode: 'onTouched',
   })
 
-  const {ref: emailRef, ...emailProps} = register("email", { required: true })
-  const {ref: passwordRef, ...passwordProps} = register("password", { required: true })
+  const { ref: emailRef, ...emailProps } = register('email', { required: true })
+  const { ref: passwordRef, ...passwordProps } = register('password', {
+    required: true,
+  })
 
   const onSubmit = (data: LoginSchema) => {
     console.log(data)
@@ -53,7 +59,7 @@ export default function LoginForm() {
         placeholder="you@example.com"
         autoComplete="email"
         error={Boolean(errors.email)}
-        helperText={errors.email ? errors.email.message : " "}
+        helperText={errors.email ? errors.email.message : ' '}
       />
 
       {/* Password */}
@@ -63,11 +69,11 @@ export default function LoginForm() {
         fullWidth
         label="Password"
         name="password"
-        type={showPassword ? "text" : "password"}
+        type={showPassword ? 'text' : 'password'}
         placeholder="Enter your password"
         autoComplete="current-password"
         error={Boolean(errors.password)}
-        helperText={errors.password ? errors.password.message : " "}
+        helperText={errors.password ? errors.password.message : ' '}
 
         slotProps={{
           input: {
