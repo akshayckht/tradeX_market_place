@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   IconButton,
   InputAdornment,
@@ -8,13 +9,24 @@ import {
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useAppDispatch, useAppSelector } from '../../../app/hooks.ts'
+import { loginUser } from '../store/authThunks.ts'
 
 import { loginSchema, type LoginSchema } from '../schema/login.schema.ts'
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import { clearLoginError } from '../store/authSlice.ts'
+
 
 export default function LoginForm() {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  
+  const loginError = useAppSelector((state) => state.auth.loginError)
+  const [loginSuccess, setLoginSuccess] = useState(false)
+
   const [showPassword, setShowPassword] = useState(false)
 
   const {
@@ -37,8 +49,18 @@ export default function LoginForm() {
     required: true,
   })
 
-  const onSubmit = (data: LoginSchema) => {
-    console.log(data)
+  const onSubmit = async (data: LoginSchema) => {
+    setLoginSuccess(false)
+
+    dispatch(clearLoginError())
+
+    const result = await dispatch(loginUser(data))
+
+    navigate("/",{replace: true})
+
+    if (loginUser.fulfilled.match(result)) {
+      setLoginSuccess(true)
+    }
   }
 
   return (
@@ -48,6 +70,13 @@ export default function LoginForm() {
       spacing={2.5}
       noValidate
     >
+      {loginError && <Alert severity="error">{loginError}</Alert>}
+
+      {loginSuccess && (
+        <Alert severity="success">
+          Login successful! Your session is active.
+        </Alert>
+      )}
       {/* Email */}
       <TextField
         {...emailProps}

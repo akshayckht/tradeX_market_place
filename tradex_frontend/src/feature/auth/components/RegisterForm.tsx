@@ -1,16 +1,24 @@
-import { Box, Button, Stack, TextField } from '@mui/material'
+import { Alert, Box, Button, Stack, TextField } from '@mui/material'
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { registrationSchema } from '../schema/registration.schema.ts'
 import type { RegistrationSchema } from '../schema/registration.schema.ts'
 
+import { useState } from 'react'
+import { authApi } from '../../../api/authApi.ts'
+import { useNavigate } from 'react-router'
+import axios from 'axios'
+
 export default function RegisterForm() {
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<RegistrationSchema>({
     resolver: zodResolver(registrationSchema),
 
     defaultValues: {
@@ -31,8 +39,27 @@ export default function RegisterForm() {
   const { ref: confirmPasswordRef, ...confirmPasswordProps } =
     register('confirmPassword')
 
-  const onSubmit = (data: RegistrationSchema) => {
-    console.log(data)
+  const onSubmit = async (data: RegistrationSchema) => {
+    try {
+      const payload = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+      }
+
+      await authApi.register(payload)
+
+      navigate('/login', {
+        replace: true,
+      })
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        setSubmitError(e.response?.data?.message)
+      } else {
+        setSubmitError('Something went wrong please try again')
+      }
+    }
   }
 
   return (
@@ -42,6 +69,8 @@ export default function RegisterForm() {
       onSubmit={handleSubmit(onSubmit)}
       spacing={2.5}
     >
+      {submitError && <Alert severity="error">{submitError}</Alert>}
+
       {/* Name fields */}
       <Box
         sx={{
